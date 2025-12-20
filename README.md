@@ -68,6 +68,9 @@ Please respect creators and platform terms.
 | Screenshot | Description |
 |----------|-------------|
 | ![Main](screenshots/main.png) | Main window with clean quality selection |
+| ![Extension](screenshots/extension.png) | Browser Extension on YouTube Page |
+| ![Download Settings](screenshots/download.png) | Select Quality & Save Location |
+| ![Downloading](screenshots/downloading.png) | Fast Downloading |
 | ![Library](screenshots/library.png) | Downloaded files library view |
 
 ---

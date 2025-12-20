@@ -70,7 +70,7 @@ Please respect creators and platform terms.
 | Screenshot | Description |
 |----------|-------------|
 | ![Main](screenshots/main.PNG) | Main window with clean quality selection |
-| ![Extension](screenshots/extension.PNG) | Browser Extension on YouTube Page |
+| ![Extension](screenshots/extension.PNG) | Download Button YouTube Page (Extension) |
 | ![Download Settings](screenshots/download.PNG) | Select Quality & Save Location |
 | ![Downloading](screenshots/downloading.PNG) | Fast Downloading |
 | ![Library](screenshots/library.PNG) | Downloaded files library view (with thumbnails) |

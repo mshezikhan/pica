@@ -73,7 +73,7 @@ Please respect creators and platform terms.
 | ![Extension](screenshots/extension.PNG) | Browser Extension on YouTube Page |
 | ![Download Settings](screenshots/download.PNG) | Select Quality & Save Location |
 | ![Downloading](screenshots/downloading.PNG) | Fast Downloading |
-| ![Library](screenshots/library.PNG) | Downloaded files library view |
+| ![Library](screenshots/library.PNG) | Downloaded files library view (with thumbnails) |
 
 ---
 

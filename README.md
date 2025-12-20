@@ -98,6 +98,8 @@ python main.py
 ```
 ---
 
+Note: Download ffmpeg.exe and paste in tools/ffmpeg/
+
 ## 👥 Contributing
 
 1. Fork the repository

@@ -1,0 +1,3 @@
+pytubefix
+pystray
+requests

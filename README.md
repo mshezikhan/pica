@@ -43,8 +43,10 @@ It is designed as a **learning-focused, ethical, and user-respecting tool**.
 
 📂 **Open File & Open Location** – Quick access after download  
 🧼 **Minimal UI** – No ads, no clutter  
-🕶 **Silent Error Handling** – No scary error dialogs  
+🕶 **Autostartup & Tray support** – Auto start & stay silent in tray  
 🧠 **Beginner-Friendly** – Simple and easy to use
+
+...................................... and much more.
 
 ---
 
@@ -75,9 +77,40 @@ Please respect creators and platform terms.
 
 ---
 
+---
+
+## 🛠 Tech Stack
+
+- **Language:** Python  
+- **GUI:** Tkinter
+- **Backend:** Pytube    
+---
+
+## ⚙️ Local Setup
+
+```bash
+git clone https://github.com/mshikebkhan/pica.git
+cd pica
+python -m venv venv
+venv\Scripts\activate         # For Windows
+pip install -r requirements.txt
+python main.py
+```
+---
+
+## 👥 Contributing
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature-name`
+3. Commit your changes
+4. Push to your branch
+5. Open a Pull Request 🚀
+
+---
+
 ## 📄 License
 
-[License](LICENSE)
+[MIT License](LICENSE)
 
 ---
 

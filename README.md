@@ -29,6 +29,12 @@ It is designed as a **learning-focused, ethical, and user-respecting tool**.
 🔀 **Adaptive Stream Support** – Automatic audio + video merging  
 ⚙️ **FFmpeg Integration** – Seamless background merging  
 
+🧩 **Browser Extension Support**  
+- One-click download button directly on YouTube video pages  
+- Automatically sends the video link to the Pica desktop app  
+- No copy–paste needed  
+- Designed to feel native and instant
+
 📚 **Smart Video Library**  
 - All downloaded videos are displayed with **thumbnails**  
 - Videos **grouped by channel/publisher name**  

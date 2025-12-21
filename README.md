@@ -89,7 +89,7 @@ Please respect creators and platform terms.
 ## ⚙️ Local Setup
 
 ```bash
-git clone https://github.com/mshikebkhan/pica.git
+git clone https://github.com/mshezikhan/pica.git
 cd pica
 python -m venv venv
 venv\Scripts\activate         # For Windows

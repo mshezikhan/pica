@@ -122,6 +122,7 @@ def add_to_library(yt, video_path):
 
     entry = {
         "id": yt.video_id,
+        "title": yt.title or "Unknown",
         "author": yt.author or "Unknown",
         "publish_date": publish_date,
         "downloaded_at": datetime.now().isoformat(),

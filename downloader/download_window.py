@@ -3,6 +3,7 @@ from tkinter import ttk, filedialog, messagebox
 import threading
 import time
 import os
+import webbrowser
 import subprocess
 from utils.window_pos_helper import center_window
 from tools.ffmpeg_helper import merge_audio_video
@@ -23,6 +24,9 @@ class DownloadWindow:
             "started": False
         }
 
+        self.remaining_mode = "na"  # values: "na", "calculating", "active", "done" 
+
+
         self.phase_start_time = None
         self.total_elapsed_time = 0.0
 
@@ -37,7 +41,7 @@ class DownloadWindow:
 
         self.win = tk.Toplevel(parent)
         self.win.title("Preparing...")
-        center_window(self.win, 420, 380)
+        center_window(self.win, 420, 390)
         self.win.resizable(False, False)
         self.win.deiconify()
         self.win.lift()
@@ -46,7 +50,7 @@ class DownloadWindow:
             self.build_ui()
         except:
             messagebox.showerror(
-                "Error",
+                "Unexpected Error",
                 "Pica is unable to download this video.\nAn unexpected error occurred."
             )
             self.win.destroy()
@@ -211,6 +215,10 @@ class DownloadWindow:
         # show initial state
         self.status_label.config(text="Status: Connecting…", foreground="#6A1B9A")
 
+        self.remaining_mode = "calculating"
+        self.last_remaining = 0
+
+
         # initial phase intent (NO progress yet)
         self.phase["stream"] = self.stream
         self.phase["label"] = None   # <-- important
@@ -254,9 +262,18 @@ class DownloadWindow:
             self.speed_label.config(
                 text=f"Speed: {format_size(self.last_speed)}/s"
             )
-            self.remaining_label.config(
-                text=f"Remaining: {format_time(self.last_remaining)}"
-            )
+
+            if self.remaining_mode == "calculating":
+                self.remaining_label.config(text="Remaining: Calculating")
+            elif self.remaining_mode == "na":
+                self.remaining_label.config(text="Remaining: Na")
+            elif self.remaining_mode == "done":
+                self.remaining_label.config(text="Remaining: 00:00:00")
+            else:  # active
+                self.remaining_label.config(
+                    text=f"Remaining: {format_time(self.last_remaining)}"
+                )
+
 
             if self.is_downloading:
                 self.win.after(100, tick)
@@ -272,6 +289,7 @@ class DownloadWindow:
                 filename = safe_filename(self.yt.title) + ".m4a"
                 self.final_file_path = get_unique_path(folder, filename)
 
+                self.start_phase(self.stream, "Downloading")
                 self.stream.download(
                     output_path=folder,
                     filename=os.path.basename(self.final_file_path)
@@ -281,6 +299,7 @@ class DownloadWindow:
                 filename = safe_filename(self.yt.title) + ".mp4"
                 self.final_file_path = get_unique_path(folder, filename)
 
+                self.start_phase(self.stream, "Downloading")
                 self.stream.download(
                     output_path=folder,
                     filename=os.path.basename(self.final_file_path)
@@ -289,6 +308,11 @@ class DownloadWindow:
             else:
                 self.download_adaptive()
 
+            self.remaining_mode = "done"
+            self.last_remaining = 0
+
+            # ✅ FORCE final repaint (important)
+            self.remaining_label.config(text="Remaining: 00:00:00")
             self.win.after(0, self.on_complete)
         except Exception:
             pass
@@ -371,6 +395,9 @@ class DownloadWindow:
         output = get_unique_path(base, filename)
         self.final_file_path = output
 
+
+        self.remaining_mode = "na"
+        self.last_remaining = 0
         merge_audio_video(video_path, audio_path, output)
 
         self.merge_done = True
@@ -408,6 +435,10 @@ class DownloadWindow:
         self.phase["label"] = label
         self.phase["started"] = False
 
+        # ✅ RESET remaining logic HERE
+        self.remaining_mode = "calculating"
+        self.last_remaining = 0
+
         self.total_size = stream.filesize or stream.filesize_approx
         self.start_time = time.time()
 
@@ -441,6 +472,13 @@ class DownloadWindow:
         except Exception:
             pass
 
+    def open_support_link(self, event=None):
+        try:
+            import webbrowser
+            webbrowser.open("https://www.buymeacoffee.com/mshezikhan")
+        except Exception:
+            pass  # fail silently
+
 
     def on_complete(self):
         if self.cancel_event.is_set():
@@ -466,23 +504,40 @@ class DownloadWindow:
         for w in self.action_frame.winfo_children():
             w.destroy()
 
+        # buttons row
+        btn_row = ttk.Frame(self.action_frame)
+        btn_row.pack()
+
         ttk.Button(
-            self.action_frame,
+            btn_row,
             text="Open",
             command=self.open_file
         ).pack(side="left", padx=(0, 16))
 
         ttk.Button(
-            self.action_frame,
+            btn_row,
             text="Open Folder",
             command=self.open_folder
         ).pack(side="left", padx=(0, 16))
 
         ttk.Button(
-            self.action_frame,
+            btn_row,
             text="Library",
             command=self.open_library
         ).pack(side="left")
+
+
+        support = tk.Label(
+            self.action_frame,
+            text="Support Pica",
+            fg="#1A73E8",
+            cursor="hand2",
+            font=("Segoe UI", 9, "underline")
+        )
+        support.pack(pady=(10, 0))
+
+        support.bind("<Button-1>", self.open_support_link)
+
 
         # Add to Library
         try:
@@ -545,6 +600,7 @@ class DownloadWindow:
 
         if not self.phase["started"]:
             self.phase["started"] = True
+            self.remaining_mode = "active"
             self.win.after(
                 0,
                 lambda: self.status_label.config(

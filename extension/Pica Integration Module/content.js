@@ -9,47 +9,39 @@
     const TRIGGER = "start_download";
 
     let overlayDismissed = false;
-    let lastVideoId = null;
+    let lastUrl = location.href;
 
-    function getVideoId() {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("v");
-    }
-
-    function getCleanVideoUrl() {
-      const videoId = getVideoId();
-      if (videoId) {
-        return `https://www.youtube.com/watch?v=${videoId}`;
-      }
-      return window.location.href;
-    }
-
+    // ------------------------------
+    // Add overlay button
+    // ------------------------------
     function addOverlay() {
       if (overlayDismissed) return;
-
-      const player = document.querySelector(".html5-video-player");
-      if (!player) return;
       if (document.getElementById(CONTAINER_ID)) return;
 
-      if (getComputedStyle(player).position === "static") {
+      // Normal video OR Shorts player
+      const player =
+        document.querySelector(".html5-video-player") ||
+        document.querySelector("ytd-reel-video-renderer");
+
+      if (!player) return;
+
+      const style = getComputedStyle(player);
+      if (!style || style.position === "static") {
         player.style.position = "relative";
       }
 
       const container = document.createElement("div");
       container.id = CONTAINER_ID;
 
+      // ------------------------------
       // Download button
+      // ------------------------------
       const downloadBtn = document.createElement("button");
       downloadBtn.className = "pica-download-btn";
-      downloadBtn.title = "Download this video with Pica.";
+      downloadBtn.title = "Download this video with Pica";
 
       const icon = document.createElement("img");
-
-      // ---- SAFE ICON LOAD ----
-      if (chrome.runtime && chrome.runtime.id) {
-        icon.src = chrome.runtime.getURL("icons/download32.png");
-      }
-
+      icon.src = chrome.runtime.getURL("icons/download32.png");
       icon.alt = "Pica";
 
       const text = document.createElement("span");
@@ -62,18 +54,22 @@
         e.stopPropagation();
         e.preventDefault();
 
-        // ---- SAFE CLIPBOARD WRITE ----
-        if (chrome.runtime && chrome.runtime.id) {
+        try {
+          // Copy raw URL, desktop app handles normalization
           navigator.clipboard.writeText(
-            getCleanVideoUrl() + " " + TRIGGER
+            window.location.href + " " + TRIGGER
           );
+        } catch (err) {
+          // fail silently
         }
 
         overlayDismissed = true;
         container.remove();
       });
 
+      // ------------------------------
       // Close button
+      // ------------------------------
       const closeBtn = document.createElement("button");
       closeBtn.className = "pica-close-btn";
       closeBtn.innerText = "×";
@@ -92,11 +88,13 @@
       player.appendChild(container);
     }
 
-    function checkVideoChange() {
-      const currentVideoId = getVideoId();
-
-      if (currentVideoId && currentVideoId !== lastVideoId) {
-        lastVideoId = currentVideoId;
+    // ------------------------------
+    // Observe DOM (YouTube SPA)
+    // ------------------------------
+    const observer = new MutationObserver(() => {
+      // Reset ONLY when URL changes
+      if (location.href !== lastUrl) {
+        lastUrl = location.href;
         overlayDismissed = false;
 
         const old = document.getElementById(CONTAINER_ID);
@@ -104,26 +102,23 @@
       }
 
       addOverlay();
-    }
+    });
 
-    // Observe DOM changes (YouTube SPA)
-    const observer = new MutationObserver(checkVideoChange);
     observer.observe(document.body, {
       childList: true,
       subtree: true
     });
 
     // Initial run
-    checkVideoChange();
+    addOverlay();
 
   } catch (e) {
-    // ---- SILENTLY IGNORE EXTENSION INVALIDATION ----
+    // ---- SILENT FAIL ----
     if (
       e.message &&
       e.message.includes("Extension context invalidated")
     ) {
       return;
     }
-    console.error(e);
   }
 })();

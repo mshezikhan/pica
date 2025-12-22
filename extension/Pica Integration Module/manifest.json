@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Pica Integration Module",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Download YouTube videos with Pica",
   "permissions": ["clipboardWrite"],
   "icons": {

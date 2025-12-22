@@ -127,8 +127,28 @@ class LibraryWindow:
 
     # ------------------------------
 
+    def validate_library_entries(self, entries):
+        valid_entries = []
+
+        for item in entries:
+            path = item.get("path", "")
+            if path and os.path.exists(path):
+                valid_entries.append(item)
+            else:
+                # silently remove missing file entry
+                self.remove_entry(item)
+
+        valid_entries.sort(
+            key=lambda x: x.get("downloaded_at", ""),
+            reverse=True
+        )
+        return valid_entries[:50]
+
+    # ------------------------------
+
     def load_library(self):
-        self.entries = load_library()
+        entries = load_library()
+        self.entries = self.validate_library_entries(entries)
 
         # ✅ Sort by download time (newest first)
         self.entries.sort(
@@ -219,13 +239,38 @@ class LibraryWindow:
 
         self.bind_hover(card)
 
+        video_title=item.get("title", "Unknown title")
+        if len(video_title) > 50:
+            video_title = video_title[:47] + "..."
+
+        # Video title
+        ttk.Label(
+            card,
+            text=video_title,
+            font=("Segoe UI", 10, "bold"),
+            wraplength=THUMB_SIZE[0],
+            justify="left",
+            background="white"
+        ).pack(anchor="w", padx=8, pady=(8, 2))
+
+        # Author
+        ttk.Label(
+            card,
+            text=item.get("author", "Unknown"),
+            font=("Segoe UI", 10),
+            foreground="#666",
+            background="white"
+        ).pack(anchor="w", padx=8, pady=(0, 2))
+
+        # Uploaded ago
         ttk.Label(
             card,
             text=f"Uploaded • {humanize_date(item.get('publish_date', ''))}",
             font=("Segoe UI", 10, "bold"),
             foreground="#555",
             background="white"
-        ).pack(pady=(8, 6))
+        ).pack(anchor="w", padx=8, pady=(0, 8))
+
 
     # ------------------------------
 

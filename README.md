@@ -16,9 +16,9 @@ It is designed as a **learning-focused, ethical, and user-respecting tool**.
 
 ## 💻 Download for Windows
 
-🔗 Download from the **Releases** section of this repository.
+🔗 Download previous versions from the **Releases** section of this repository.
 
-> Always download Pica only from this official GitHub repository.
+> [Latest Release](https://github.com/mshezikhan/pica/releases/download/v2.1.0/Pica.2.1.zip)
 
 ---
 

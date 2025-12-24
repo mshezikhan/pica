@@ -18,7 +18,7 @@ It is designed as a **learning-focused, ethical, and user-respecting tool**.
 
 🔗 Download previous versions from the **Releases** section of this repository.
 
-> [Latest Release](https://github.com/mshezikhan/pica/releases/download/v2.1.0/Pica.2.1.zip)
+> [Download Latest Release Now](https://github.com/mshezikhan/pica/releases/download/v2.1.0/Pica.2.1.zip)
 
 ---
 

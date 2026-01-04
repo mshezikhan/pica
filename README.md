@@ -90,7 +90,7 @@ Please respect creators and platform terms.
 
 ```bash
 git clone https://github.com/mshezikhan/pica.git
-cd pica
+cd downloader
 python -m venv venv
 venv\Scripts\activate         # For Windows
 pip install -r requirements.txt
